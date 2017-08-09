@@ -56,6 +56,10 @@ public class BooksBorrowedByUserActivity extends LifecycleActivity {
     private void subscribeUiBooks() {
         // TODO: refresh the list of books when there's new data
         // mViewModel.books.observe(...
+        mViewModel.books.observe(this, books -> {
+            if (books == null) return;
+            showBooksInUi(books, mBooksTextView);
+        });
     }
 
     @SuppressWarnings("unused")
