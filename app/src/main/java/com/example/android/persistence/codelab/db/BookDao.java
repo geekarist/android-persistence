@@ -100,4 +100,11 @@ public interface BookDao {
 
     @Query("DELETE FROM Book")
     void deleteAll();
+
+    @Query("SELECT * FROM Book "
+            + "INNER JOIN Loan ON Loan.book_id = Book.id "
+            + "INNER JOIN User ON User.id = Loan.user_id "
+            + "WHERE User.name LIKE :user "
+            + "AND Loan.endTime > :after")
+    LiveData<List<Book>> findBooksBorrowedByNameAfterDate(String user, Date after);
 }

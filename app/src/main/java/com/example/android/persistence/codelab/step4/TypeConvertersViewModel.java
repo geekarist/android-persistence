@@ -24,6 +24,7 @@ import com.example.android.persistence.codelab.db.AppDatabase;
 import com.example.android.persistence.codelab.db.Book;
 import com.example.android.persistence.codelab.db.utils.DatabaseInitializer;
 
+import java.util.Date;
 import java.util.List;
 
 
@@ -55,6 +56,8 @@ public class TypeConvertersViewModel extends AndroidViewModel {
     private void subscribeToDbChanges() {
         // Books is a LiveData object so updates are observed.
         // TODO: replace this with a query that finds books borrowed by Mike in the last 24h
-        mBooks = mDb.bookModel().findBooksBorrowedByName("Mike");
+        Date yesterday = new Date(System.currentTimeMillis() - 24 * 60 * 60 * 1000);
+        mBooks = mDb.bookModel().findBooksBorrowedByNameAfterDate("Mike",
+                yesterday);
     }
 }

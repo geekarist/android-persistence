@@ -54,12 +54,7 @@ public class TypeConvertersActivity extends LifecycleActivity {
     }
 
     private void subscribeUiBooks() {
-        mViewModel.getBooks().observe(this, new Observer<List<Book>>() {
-            @Override
-            public void onChanged(@NonNull final List<Book> books) {
-                showBooksInUi(books, mBooksTextView);
-            }
-        });
+        mViewModel.getBooks().observe(this, books -> showBooksInUi(books, mBooksTextView));
     }
 
     private static void showBooksInUi(final @NonNull List<Book> books,
