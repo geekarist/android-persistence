@@ -47,14 +47,6 @@ public interface BookDao {
     @Query("SELECT * FROM Book " +
             "INNER JOIN Loan ON Loan.book_id = Book.id " +
             "INNER JOIN User on User.id = Loan.user_id " +
-            "WHERE User.name LIKE :userName " +
-            "AND Loan.endTime > :after "
-    )
-    public LiveData<List<Book>> findBooksBorrowedByNameAfter(String userName, Date after);
-
-    @Query("SELECT * FROM Book " +
-            "INNER JOIN Loan ON Loan.book_id = Book.id " +
-            "INNER JOIN User on User.id = Loan.user_id " +
             "WHERE User.name LIKE :userName"
     )
     public List<Book> findBooksBorrowedByNameSync(String userName);
@@ -80,14 +72,29 @@ public interface BookDao {
     public LiveData<List<Book>> findBooksBorrowedByUserAfter(String userId, Date after);
 
     @Query("SELECT * FROM Book " +
+            "INNER JOIN Loan ON Loan.book_id = Book.id " +
+            "INNER JOIN User on User.id = Loan.user_id " +
+            "WHERE User.name LIKE :userName " +
+            "AND Loan.endTime > :after "
+    )
+    public LiveData<List<Book>> findBooksBorrowedByNameAfter(String userName, Date after);
+
+    @Query("SELECT * FROM Book "
+            + "INNER JOIN Loan ON Loan.book_id = Book.id "
+            + "INNER JOIN User ON User.id = Loan.user_id "
+            + "WHERE User.name LIKE :user "
+            + "AND Loan.endTime > :after")
+    LiveData<List<Book>> findBooksBorrowedByNameAfterDate(String user, Date after);
+
+    @Query("SELECT * FROM Book " +
             "INNER JOIN Loan ON Loan.book_id LIKE Book.id " +
             "WHERE Loan.user_id LIKE :userId "
     )
     public List<Book> findBooksBorrowedByUserSync(String userId);
 
+
     @Query("SELECT * FROM Book")
     public LiveData<List<Book>> findAllBooks();
-
 
     @Query("SELECT * FROM Book")
     public List<Book> findAllBooksSync();
@@ -100,11 +107,4 @@ public interface BookDao {
 
     @Query("DELETE FROM Book")
     void deleteAll();
-
-    @Query("SELECT * FROM Book "
-            + "INNER JOIN Loan ON Loan.book_id = Book.id "
-            + "INNER JOIN User ON User.id = Loan.user_id "
-            + "WHERE User.name LIKE :user "
-            + "AND Loan.endTime > :after")
-    LiveData<List<Book>> findBooksBorrowedByNameAfterDate(String user, Date after);
 }
