@@ -60,25 +60,22 @@ public class CustomResultViewModel extends AndroidViewModel {
     private void subscribeToDbChanges() {
         // TODO: Modify this query to show only recent loans from specific user
         LiveData<List<LoanWithUserAndBook>> loans
-                = mDb.loanModel().findAllWithUserAndBook();
+                = mDb.loanModel().findLoansByNameAfter("mike", getYesterdayDate());
 
         // Instead of exposing the list of Loans, we can apply a transformation and expose Strings.
         mLoansResult = Transformations.map(loans,
-                new Function<List<LoanWithUserAndBook>, String>() {
-            @Override
-            public String apply(List<LoanWithUserAndBook> loansWithUserAndBook) {
-                StringBuilder sb = new StringBuilder();
-                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm",
-                        Locale.US);
+                loansWithUserAndBook -> {
+                    StringBuilder sb = new StringBuilder();
+                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm",
+                            Locale.US);
 
-                for (LoanWithUserAndBook loan : loansWithUserAndBook) {
-                    sb.append(String.format("%s\n  (Returned: %s)\n",
-                            loan.bookTitle,
-                            simpleDateFormat.format(loan.endTime)));
-                }
-                return sb.toString();
-            }
-        });
+                    for (LoanWithUserAndBook loan : loansWithUserAndBook) {
+                        sb.append(String.format("%s\n  (Returned: %s)\n",
+                                loan.bookTitle,
+                                simpleDateFormat.format(loan.endTime)));
+                    }
+                    return sb.toString();
+                });
     }
 
     @SuppressWarnings("unused")
